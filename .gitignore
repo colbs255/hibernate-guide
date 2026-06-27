@@ -39,4 +39,7 @@ bin/
 ### Mac OS ###
 .DS_Store
 
+### direnv ###
+.direnv/
+
 weather_stations.csv
