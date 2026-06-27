@@ -17,8 +17,11 @@ repositories {
 }
 
 dependencies {
-    // This dependency is used by the application.
-    implementation(libs.guava)
+    // Hibernate ORM for persistence.
+    implementation(libs.hibernate.core)
+
+    // H2 in-memory database for running example queries.
+    runtimeOnly(libs.h2)
 }
 
 testing {
@@ -41,4 +44,12 @@ java {
 application {
     // Define the main class for the application.
     mainClass = "org.example.App"
+}
+
+// Print the generated CREATE TABLE DDL without touching a database: ./gradlew :app:schema
+tasks.register<JavaExec>("schema") {
+    group = "application"
+    description = "Prints the DDL Hibernate would generate for the entities."
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass = "org.example.SchemaDump"
 }

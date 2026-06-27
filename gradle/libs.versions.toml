@@ -2,7 +2,9 @@
 # https://docs.gradle.org/current/userguide/platforms.html#sub::toml-dependencies-format
 
 [versions]
-guava = "33.4.6-jre"
+hibernate = "7.0.0.Final"
+h2 = "2.3.232"
 
 [libraries]
-guava = { module = "com.google.guava:guava", version.ref = "guava" }
+hibernate-core = { module = "org.hibernate.orm:hibernate-core", version.ref = "hibernate" }
+h2 = { module = "com.h2database:h2", version.ref = "h2" }
