@@ -7,4 +7,5 @@ h2 = "2.3.232"
 
 [libraries]
 hibernate-core = { module = "org.hibernate.orm:hibernate-core", version.ref = "hibernate" }
+hibernate-hikaricp = { module = "org.hibernate.orm:hibernate-hikaricp", version.ref = "hibernate" }
 h2 = { module = "com.h2database:h2", version.ref = "h2" }

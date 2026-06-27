@@ -31,6 +31,10 @@ public class App {
     /**
      * Builds a SessionFactory wired to an in-memory H2 database. {@code create-drop} rebuilds the
      * schema from the entity annotations on startup, so there is nothing to set up by hand.
+     *
+     * <p>Connections are served by HikariCP via Hibernate's {@code HikariCPConnectionProvider}.
+     * The {@code hibernate.hikari.*} properties are passed straight through to HikariCP; for a
+     * single-threaded demo a tiny pool is plenty, but the same knobs scale to production.
      */
     private static SessionFactory buildSessionFactory() {
         return new Configuration()
@@ -38,6 +42,12 @@ public class App {
                 .addAnnotatedClass(AuthorProfile.class)
                 .setProperty("hibernate.connection.url", "jdbc:h2:mem:library;DB_CLOSE_DELAY=-1")
                 .setProperty("hibernate.connection.driver_class", "org.h2.Driver")
+                .setProperty(
+                        "hibernate.connection.provider_class",
+                        "org.hibernate.hikaricp.internal.HikariCPConnectionProvider")
+                .setProperty("hibernate.hikari.minimumIdle", "2")
+                .setProperty("hibernate.hikari.maximumPoolSize", "10")
+                .setProperty("hibernate.hikari.idleTimeout", "30000")
                 .setProperty("hibernate.hbm2ddl.auto", "create-drop")
                 .setProperty("hibernate.show_sql", "true")
                 .setProperty("hibernate.format_sql", "true")
@@ -62,9 +72,10 @@ public class App {
     private static void runQueries(SessionFactory sessionFactory) {
         sessionFactory.inTransaction(session -> {
             heading("@OneToOne — author profiles");
-            session.createSelectionQuery(
+            var x = session.createSelectionQuery(
                             "select a from Author a", Author.class)
                     .getResultList();
+            x.forEach(v -> System.out.println(v.getProfile().getBio()));
         });
     }
 

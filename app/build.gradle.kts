@@ -20,6 +20,9 @@ dependencies {
     // Hibernate ORM for persistence.
     implementation(libs.hibernate.core)
 
+    // HikariCP connection pool, wired in through Hibernate's HikariCPConnectionProvider.
+    implementation(libs.hibernate.hikaricp)
+
     // H2 in-memory database for running example queries.
     runtimeOnly(libs.h2)
 }
