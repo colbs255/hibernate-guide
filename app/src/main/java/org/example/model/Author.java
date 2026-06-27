@@ -2,6 +2,7 @@ package org.example.model;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,7 +23,10 @@ public class Author {
     private String name;
 
     // Owning side of the one-to-one: the FK column (profile_id) lives on the Author table.
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    // @OneToOne defaults to EAGER; LAZY defers loading the profile until it's first accessed.
+    // Lazy works here because this is the owning side (the FK is on the Author row), so Hibernate
+    // can hand back a proxy without an extra query up front.
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private AuthorProfile profile;
 
     protected Author() {

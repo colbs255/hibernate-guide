@@ -8,6 +8,8 @@
  */
 package org.example;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.example.model.Author;
 import org.example.model.AuthorProfile;
 import org.hibernate.SessionFactory;
@@ -16,6 +18,10 @@ import org.hibernate.cfg.Configuration;
 public class App {
 
     public static void main(String[] args) {
+        // With no SLF4J backend on the classpath, Hibernate logs through java.util.logging at
+        // INFO. Raise the threshold to WARNING to silence the chatty startup banner/DDL notices.
+        Logger.getLogger("org.hibernate").setLevel(Level.WARNING);
+
         try (SessionFactory sessionFactory = buildSessionFactory()) {
             seedData(sessionFactory);
             runQueries(sessionFactory);
@@ -58,9 +64,7 @@ public class App {
             heading("@OneToOne — author profiles");
             session.createSelectionQuery(
                             "select a from Author a", Author.class)
-                    .getResultList()
-                    .forEach(author ->
-                            System.out.println(author.getName() + " — " + author.getProfile().getBio()));
+                    .getResultList();
         });
     }
 
