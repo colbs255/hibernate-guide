@@ -10,8 +10,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import org.example.model.Author;
 import org.example.model.AuthorProfile;
-import org.example.model.Book;
-import org.example.model.Category;
 import org.hibernate.cfg.Configuration;
 
 public class SchemaDump {
@@ -19,14 +17,14 @@ public class SchemaDump {
     public static void main(String[] args) throws Exception {
         Path target = Path.of("build/schema.sql");
         Files.createDirectories(target.getParent());
+        // The JPA scripts action APPENDS to the target, so clear any previous run first.
+        Files.deleteIfExists(target);
 
         // Standard JPA schema-generation properties: emit the CREATE script to a file. Only the
         // dialect is needed — no JDBC connection is opened to produce the script.
         Configuration cfg = new Configuration()
                 .addAnnotatedClass(Author.class)
                 .addAnnotatedClass(AuthorProfile.class)
-                .addAnnotatedClass(Book.class)
-                .addAnnotatedClass(Category.class)
                 .setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect")
                 .setProperty("jakarta.persistence.schema-generation.scripts.action", "create")
                 .setProperty("jakarta.persistence.schema-generation.scripts.create-target", target.toString())
