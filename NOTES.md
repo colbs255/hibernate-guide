@@ -45,3 +45,10 @@ public class AuthorProfile {
 
 Result: `select a from Author a` issues **no** query against `AuthorProfile`; the profile is
 only fetched when `author.getProfile()` is first called.
+
+### The `optional` flag and lazy
+
+The `optional` flag matters much more on the inverse side: an inverse-side `@OneToOne` with
+`optional = true` can never be lazy (Hibernate must query to learn if the row exists), whereas
+`optional = false` lets it assume presence. On your owning side, it's mainly about the
+`NOT NULL` constraint.
