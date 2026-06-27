@@ -43,3 +43,6 @@ bin/
 .direnv/
 
 weather_stations.csv
+
+# Ignore Gradle build output directory
+build
